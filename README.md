@@ -1,61 +1,46 @@
-# Faiss
-
-Faiss is a library for efficient similarity search and clustering of dense vectors. It contains algorithms that search in sets of vectors of any size, up to ones that possibly do not fit in RAM. It also contains supporting code for evaluation and parameter tuning. Faiss is written in C++ with complete wrappers for Python/numpy. Some of the most useful algorithms are implemented on the GPU. It is developed primarily at Meta's [Fundamental AI Research](https://ai.facebook.com/) group.
-
-## News
-
-See [CHANGELOG.md](CHANGELOG.md) for detailed information about latest features.
-
-## Introduction
-
-Faiss contains several methods for similarity search. It assumes that the instances are represented as vectors and are identified by an integer, and that the vectors can be compared with L2 (Euclidean) distances or dot products. Vectors that are similar to a query vector are those that have the lowest L2 distance or the highest dot product with the query vector. It also supports cosine similarity, since this is a dot product on normalized vectors.
-
-Some of the methods, like those based on binary vectors and compact quantization codes, solely use a compressed representation of the vectors and do not require to keep the original vectors. This generally comes at the cost of a less precise search but these methods can scale to billions of vectors in main memory on a single server. Other methods, like HNSW and NSG add an indexing structure on top of the raw vectors to make searching more efficient.
-
-The GPU implementation can accept input from either CPU or GPU memory. On a server with GPUs, the GPU indexes can be used a drop-in replacement for the CPU indexes (e.g., replace `IndexFlatL2` with `GpuIndexFlatL2`) and copies to/from GPU memory are handled automatically. Results will be faster however if both input and output remain resident on the GPU. Both single and multi-GPU usage is supported.
-
-## Installing
-
-Faiss comes with precompiled libraries for Anaconda in Python, see [faiss-cpu](https://anaconda.org/pytorch/faiss-cpu) and [faiss-gpu](https://anaconda.org/pytorch/faiss-gpu). The library is mostly implemented in C++, the only dependency is a [BLAS](https://en.wikipedia.org/wiki/Basic_Linear_Algebra_Subprograms) implementation. Optional GPU support is provided via CUDA, and the Python interface is also optional. It compiles with cmake. See [INSTALL.md](INSTALL.md) for details.
-
-## How Faiss works
-
-Faiss is built around an index type that stores a set of vectors, and provides a function to search in them with L2 and/or dot product vector comparison. Some index types are simple baselines, such as exact search. Most of the available indexing structures correspond to various trade-offs with respect to
-
-- search time
-- search quality
-- memory used per index vector
-- training time
-- adding time
-- need for external data for unsupervised training
-
-The optional GPU implementation provides what is likely (as of March 2017) the fastest exact and approximate (compressed-domain) nearest neighbor search implementation for high-dimensional vectors, fastest Lloyd's k-means, and fastest small k-selection algorithm known. [The implementation is detailed here](https://arxiv.org/abs/1702.08734).
-
-## Full documentation of Faiss
-
-The following are entry points for documentation:
-
-- the full documentation can be found on the [wiki page](http://github.com/facebookresearch/faiss/wiki), including a [tutorial](https://github.com/facebookresearch/faiss/wiki/Getting-started), a [FAQ](https://github.com/facebookresearch/faiss/wiki/FAQ) and a [troubleshooting section](https://github.com/facebookresearch/faiss/wiki/Troubleshooting)
-- the [doxygen documentation](https://faiss.ai/) gives per-class information extracted from code comments
-- to reproduce results from our research papers, [Polysemous codes](https://arxiv.org/abs/1609.01882) and [Billion-scale similarity search with GPUs](https://arxiv.org/abs/1702.08734), refer to the [benchmarks README](benchs/README.md). For [
-Link and code: Fast indexing with graphs and compact regression codes](https://arxiv.org/abs/1804.09996), see the [link_and_code README](benchs/link_and_code)
-
-## Authors
-
-The main authors of Faiss are:
-- [Hervé Jégou](https://github.com/jegou) initiated the Faiss project and wrote its first implementation
-- [Matthijs Douze](https://github.com/mdouze) implemented most of the CPU Faiss
-- [Jeff Johnson](https://github.com/wickedfoo) implemented all of the GPU Faiss
-- [Lucas Hosseini](https://github.com/beauby) implemented the binary indexes and the build system
-- [Chengqi Deng](https://github.com/KinglittleQ) implemented NSG, NNdescent and much of the additive quantization code.
-- [Alexandr Guzhva](https://github.com/alexanderguzhva) many optimizations: SIMD, memory allocation and layout, fast decoding kernels for vector codecs, etc.
-- [Gergely Szilvasy](https://github.com/algoriddle) build system, benchmarking framework.
-
-## Reference
-
-References to cite when you use Faiss in a research paper:
-```
-@article{douze2024faiss,
+<div class="Box-sc-g0xbh4-0 bJMeLZ js-snippet-clipboard-copy-unpositioned" data-hpc="true"><article class="markdown-body entry-content container-lg" itemprop="text"><h1 tabindex="-1" dir="auto"><a id="user-content-faiss" class="anchor" aria-hidden="true" tabindex="-1" href="#faiss"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">费斯</font></font></h1>
+<p dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Faiss 是一个用于高效相似性搜索和密集向量聚类的库。它包含的算法可以搜索任意大小的向量集，甚至可能无法容纳在 RAM 中的向量集。它还包含用于评估和参数调整的支持代码。 Faiss 是用 C++ 编写的，带有 Python/numpy 的完整包装器。一些最有用的算法是在 GPU 上实现的。它主要由 Meta 的</font></font><a href="https://ai.facebook.com/" rel="nofollow"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">基础人工智能研究</font></font></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">小组开发</font><font style="vertical-align: inherit;">。</font></font></p>
+<h2 tabindex="-1" dir="auto"><a id="user-content-news" class="anchor" aria-hidden="true" tabindex="-1" href="#news"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">消息</font></font></h2>
+<p dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">有关最新功能的详细信息，</font><font style="vertical-align: inherit;">请参阅</font></font><a href="/facebookresearch/faiss/blob/main/CHANGELOG.md"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">CHANGELOG.md 。</font></font></a><font style="vertical-align: inherit;"></font></p>
+<h2 tabindex="-1" dir="auto"><a id="user-content-introduction" class="anchor" aria-hidden="true" tabindex="-1" href="#introduction"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">介绍</font></font></h2>
+<p dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Faiss 包含多种相似性搜索方法。它假设实例表示为向量并由整数标识，并且向量可以与 L2（欧几里得）距离或点积进行比较。与查询向量相似的向量是那些与查询向量具有最小 L2 距离或最高点积的向量。它还支持余弦相似度，因为这是归一化向量上的点积。</font></font></p>
+<p dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">一些方法，例如基于二进制向量和紧凑量化码的方法，仅使用向量的压缩表示，并且不需要保留原始向量。这通常是以搜索精度较低为代价的，但这些方法可以扩展到单个服务器上主内存中的数十亿个向量。其他方法（例如 HNSW 和 NSG）在原始向量之上添加索引结构，以使搜索更加高效。</font></font></p>
+<p dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">GPU 实现可以接受来自 CPU 或 GPU 内存的输入。在具有 GPU 的服务器上，GPU 索引可用于直接替换 CPU 索引（例如，替换</font></font><code>IndexFlatL2</code><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">为</font></font><code>GpuIndexFlatL2</code><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">），并且会自动处理与 GPU 内存之间的副本。然而，如果输入和输出都保留在 GPU 上，结果将会更快。支持单 GPU 和多 GPU 使用。</font></font></p>
+<h2 tabindex="-1" dir="auto"><a id="user-content-installing" class="anchor" aria-hidden="true" tabindex="-1" href="#installing"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">安装中</font></font></h2>
+<p dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Faiss 附带了 Python 中 Anaconda 的预编译库，请参阅</font></font><a href="https://anaconda.org/pytorch/faiss-cpu" rel="nofollow"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">faiss-cpu</font></font></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">和</font></font><a href="https://anaconda.org/pytorch/faiss-gpu" rel="nofollow"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">faiss-gpu</font></font></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">。该库主要用 C++ 实现，唯一的依赖项是</font></font><a href="https://en.wikipedia.org/wiki/Basic_Linear_Algebra_Subprograms" rel="nofollow"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">BLAS</font></font></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">实现。通过 CUDA 提供可选的 GPU 支持，Python 接口也是可选的。它是用cmake编译的。有关详细信息，</font><font style="vertical-align: inherit;">请参阅</font></font><a href="/facebookresearch/faiss/blob/main/INSTALL.md"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">INSTALL.md</font></font></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">。</font></font></p>
+<h2 tabindex="-1" dir="auto"><a id="user-content-how-faiss-works" class="anchor" aria-hidden="true" tabindex="-1" href="#how-faiss-works"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">费斯的工作原理</font></font></h2>
+<p dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Faiss 围绕存储一组向量的索引类型构建，并提供通过 L2 和/或点积向量比较在其中进行搜索的函数。有些索引类型是简单的基线，例如精确搜索。大多数可用的索引结构都对应于以下方面的各种权衡</font></font></p>
+<ul dir="auto">
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">搜索时间</font></font></li>
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">搜索质量</font></font></li>
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">每个索引向量使用的内存</font></font></li>
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">训练时间</font></font></li>
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">添加时间</font></font></li>
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">无监督训练需要外部数据</font></font></li>
+</ul>
+<p dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">可选的 GPU 实现提供了可能（截至 2017 年 3 月）最快的精确和近似（压缩域）最近邻搜索实现，用于高维向量、最快的劳埃德 k 均值和已知最快的小型 k 选择算法。</font></font><a href="https://arxiv.org/abs/1702.08734" rel="nofollow"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">此处详细介绍了实现过程</font></font></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">。</font></font></p>
+<h2 tabindex="-1" dir="auto"><a id="user-content-full-documentation-of-faiss" class="anchor" aria-hidden="true" tabindex="-1" href="#full-documentation-of-faiss"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Faiss 的完整文档</font></font></h2>
+<p dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">以下是文档的入口点：</font></font></p>
+<ul dir="auto">
+<li><font style="vertical-align: inherit;"></font><a href="http://github.com/facebookresearch/faiss/wiki"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">完整的文档可以在wiki 页面</font></font></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">上找到</font><font style="vertical-align: inherit;">，包括</font></font><a href="https://github.com/facebookresearch/faiss/wiki/Getting-started"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">教程</font></font></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">、</font></font><a href="https://github.com/facebookresearch/faiss/wiki/FAQ"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">常见问题解答</font></font></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">和</font></font><a href="https://github.com/facebookresearch/faiss/wiki/Troubleshooting"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">故障排除部分。</font></font></a></li>
+<li><font style="vertical-align: inherit;"></font><a href="https://faiss.ai/" rel="nofollow"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">doxygen 文档</font></font></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">提供</font><font style="vertical-align: inherit;">了从代码注释中提取的每个类的信息</font></font></li>
+<li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">要重现我们的研究论文、</font></font><a href="https://arxiv.org/abs/1609.01882" rel="nofollow"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">多义代码</font></font></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">和</font></font><a href="https://arxiv.org/abs/1702.08734" rel="nofollow"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">使用 GPU 进行十亿级相似性搜索的</font></font></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">结果，请参阅</font></font><a href="/facebookresearch/faiss/blob/main/benchs/README.md"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">基准测试自述文件</font></font></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">。对于</font></font><a href="https://arxiv.org/abs/1804.09996" rel="nofollow"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+链接和代码：使用图形和紧凑回归代码进行快速索引</font></font></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">，请参阅</font></font><a href="/facebookresearch/faiss/blob/main/benchs/link_and_code"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">link_and_code README</font></font></a></li>
+</ul>
+<h2 tabindex="-1" dir="auto"><a id="user-content-authors" class="anchor" aria-hidden="true" tabindex="-1" href="#authors"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">作者</font></font></h2>
+<p dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Faiss 的主要作者有：</font></font></p>
+<ul dir="auto">
+<li><a href="https://github.com/jegou"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Hervé Jégou</font></font></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">发起了 Faiss 项目并编写了第一个实现</font></font></li>
+<li><a href="https://github.com/mdouze"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Matthijs Douze</font></font></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">实现了 Faiss 的大部分 CPU</font></font></li>
+<li><a href="https://github.com/wickedfoo"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Jeff Johnson</font></font></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">实现了所有 GPU Faiss</font></font></li>
+<li><a href="https://github.com/beauby"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Lucas Hosseini</font></font></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">实现了二进制索引和构建系统</font></font></li>
+<li><a href="https://github.com/KinglittleQ"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Chengqi Deng</font></font></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">实现了 NSG、NNdescent 和大部分加性量化代码。</font></font></li>
+<li><a href="https://github.com/alexanderguzhva"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Alexandr Guzhva</font></font></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">进行了许多优化：SIMD、内存分配和布局、矢量编解码器的快速解码内核等。</font></font></li>
+<li><a href="https://github.com/algoriddle"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Gergely Szilvasy</font></font></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">构建系统，基准测试框架。</font></font></li>
+</ul>
+<h2 tabindex="-1" dir="auto"><a id="user-content-reference" class="anchor" aria-hidden="true" tabindex="-1" href="#reference"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">参考</font></font></h2>
+<p dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">在研究论文中使用 Faiss 时要引用的参考文献：</font></font></p>
+<div class="snippet-clipboard-content notranslate position-relative overflow-auto"><pre class="notranslate"><code>@article{douze2024faiss,
       title={The Faiss library},
       author={Matthijs Douze and Alexandr Guzhva and Chengqi Deng and Jeff Johnson and Gergely Szilvasy and Pierre-Emmanuel Mazaré and Maria Lomeli and Lucas Hosseini and Hervé Jégou},
       year={2024},
@@ -63,10 +48,25 @@ References to cite when you use Faiss in a research paper:
       archivePrefix={arXiv},
       primaryClass={cs.LG}
 }
-```
-For the GPU version of Faiss, please cite:
-```
-@article{johnson2019billion,
+</code></pre><div class="zeroclipboard-container">
+    <clipboard-copy aria-label="Copy" class="ClipboardButton btn btn-invisible js-clipboard-copy m-2 p-0 tooltipped-no-delay d-flex flex-justify-center flex-items-center" data-copy-feedback="Copied!" data-tooltip-direction="w" value="@article{douze2024faiss,
+      title={The Faiss library},
+      author={Matthijs Douze and Alexandr Guzhva and Chengqi Deng and Jeff Johnson and Gergely Szilvasy and Pierre-Emmanuel Mazaré and Maria Lomeli and Lucas Hosseini and Hervé Jégou},
+      year={2024},
+      eprint={2401.08281},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG}
+}" tabindex="0" role="button">
+      <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-copy js-clipboard-copy-icon">
+    <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"></path><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path>
+</svg>
+      <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-check js-clipboard-check-icon color-fg-success d-none">
+    <path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path>
+</svg>
+    </clipboard-copy>
+  </div></div>
+<p dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">对于 Faiss 的 GPU 版本，请引用：</font></font></p>
+<div class="snippet-clipboard-content notranslate position-relative overflow-auto"><pre class="notranslate"><code>@article{johnson2019billion,
   title={Billion-scale similarity search with {GPUs}},
   author={Johnson, Jeff and Douze, Matthijs and J{\'e}gou, Herv{\'e}},
   journal={IEEE Transactions on Big Data},
@@ -76,17 +76,29 @@ For the GPU version of Faiss, please cite:
   year={2019},
   publisher={IEEE}
 }
-```
-
-## Join the Faiss community
-
-For public discussion of Faiss or for questions, there is a Facebook group at https://www.facebook.com/groups/faissusers/
-
-We monitor the [issues page](http://github.com/facebookresearch/faiss/issues) of the repository.
-You can report bugs, ask questions, etc.
-
-## Legal
-
-Faiss is MIT-licensed, refer to the [LICENSE file](https://github.com/facebookresearch/faiss/blob/main/LICENSE) in the top level directory.
-
-Copyright © Meta Platforms, Inc. See the [Terms of Use](https://opensource.fb.com/legal/terms/) and [Privacy Policy](https://opensource.fb.com/legal/privacy/) for this project.
+</code></pre><div class="zeroclipboard-container">
+    <clipboard-copy aria-label="Copy" class="ClipboardButton btn btn-invisible js-clipboard-copy m-2 p-0 tooltipped-no-delay d-flex flex-justify-center flex-items-center" data-copy-feedback="Copied!" data-tooltip-direction="w" value="@article{johnson2019billion,
+  title={Billion-scale similarity search with {GPUs}},
+  author={Johnson, Jeff and Douze, Matthijs and J{\'e}gou, Herv{\'e}},
+  journal={IEEE Transactions on Big Data},
+  volume={7},
+  number={3},
+  pages={535--547},
+  year={2019},
+  publisher={IEEE}
+}" tabindex="0" role="button">
+      <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-copy js-clipboard-copy-icon">
+    <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"></path><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path>
+</svg>
+      <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-check js-clipboard-check-icon color-fg-success d-none">
+    <path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path>
+</svg>
+    </clipboard-copy>
+  </div></div>
+<h2 tabindex="-1" dir="auto"><a id="user-content-join-the-faiss-community" class="anchor" aria-hidden="true" tabindex="-1" href="#join-the-faiss-community"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">加入费斯社区</font></font></h2>
+<p dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">如需对 Faiss 进行公开讨论或提出问题，请访问 Facebook 群组：</font></font><a href="https://www.facebook.com/groups/faissusers/" rel="nofollow"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">https://www.facebook.com/groups/faissusers/</font></font></a></p>
+<p dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">我们监控</font><font style="vertical-align: inherit;">存储库的</font></font><a href="http://github.com/facebookresearch/faiss/issues"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">问题页面</font></font></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">。您可以报告错误、提出问题等。</font></font></p>
+<h2 tabindex="-1" dir="auto"><a id="user-content-legal" class="anchor" aria-hidden="true" tabindex="-1" href="#legal"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">合法的</font></font></h2>
+<p dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Faiss 已获得 MIT 许可，请参阅</font><font style="vertical-align: inherit;">顶层目录中的</font></font><a href="https://github.com/facebookresearch/faiss/blob/main/LICENSE"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">LICENSE 文件。</font></font></a><font style="vertical-align: inherit;"></font></p>
+<p dir="auto"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">版权所有 © Meta Platforms, Inc. 请参阅</font><font style="vertical-align: inherit;">该项目的</font></font><a href="https://opensource.fb.com/legal/terms/" rel="nofollow"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">使用条款</font></font></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">和</font></font><a href="https://opensource.fb.com/legal/privacy/" rel="nofollow"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">隐私政策。</font></font></a><font style="vertical-align: inherit;"></font></p>
+</article></div>
